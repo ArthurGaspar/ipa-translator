@@ -1,0 +1,126 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Tradutor IPA — Português · Inglês · Espanhol · Árabe · Mandarim ⇄ IPA</title>
+  <meta name="description" content="Converta português brasileiro, inglês americano, espanhol da Espanha, árabe (sotaque libanês) e mandarim em IPA (Alfabeto Fonético Internacional), e qualquer IPA em uma pronúncia escrita nessas línguas.">
+  <meta name="theme-color" content="#1a73e8">
+  <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Crect width='64' height='64' rx='14' fill='%231a73e8'/%3E%3Ctext x='32' y='45' font-size='38' text-anchor='middle' fill='white' font-family='serif'%3Eɐ%3C/text%3E%3C/svg%3E">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Noto+Naskh+Arabic:wght@400;500&family=Noto+Sans:ital,wght@0,400;0,500;0,600;1,400&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="assets/style.css">
+  <script>
+    try { const t = localStorage.getItem('theme'); if (t) document.documentElement.dataset.theme = t; } catch {}
+  </script>
+</head>
+<body>
+  <header class="topbar">
+    <a class="brand" href="./">
+      <span class="logo" aria-hidden="true">ɐ</span>
+      <span>
+        <span class="brand-name" data-i18n="appName">Tradutor IPA</span>
+        <span class="brand-tag" data-i18n="tagline">Português do Brasil ⇄ Alfabeto Fonético Internacional</span>
+      </span>
+    </a>
+    <div class="top-actions">
+      <button class="pill" id="uiLangBtn" type="button" aria-label="Interface language">EN</button>
+      <button class="icon-btn" id="themeBtn" type="button" aria-label="Theme">
+        <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 3a9 9 0 1 0 9 9c0-.46-.04-.92-.1-1.36a5.39 5.39 0 0 1-4.4 2.26 5.4 5.4 0 0 1-3.14-9.8c-.44-.06-.9-.1-1.36-.1z"/></svg>
+      </button>
+    </div>
+  </header>
+
+  <main class="container">
+    <section class="translator" aria-label="Translator">
+      <div class="langbar">
+        <div class="tabs" id="srcTabs" role="tablist"></div>
+        <button class="icon-btn swap" id="swapBtn" type="button" data-i18n-title="swap" title="Inverter idiomas">
+          <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M6.99 11 3 15l3.99 4v-3H14v-2H6.99v-3zM21 9l-3.99-4v3H10v2h7.01v3L21 9z"/></svg>
+        </button>
+        <div class="tabs" id="tgtTabs" role="tablist"></div>
+      </div>
+
+      <div class="panels">
+        <div class="panel src">
+          <div class="field">
+            <textarea id="src" dir="auto" spellcheck="false" autocomplete="off" autocapitalize="off" maxlength="5000" rows="4"></textarea>
+            <button class="icon-btn clear" id="clearBtn" type="button" data-i18n-title="clear" title="Limpar texto" hidden>
+              <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M19 6.41 17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z"/></svg>
+            </button>
+          </div>
+          <div class="panel-foot">
+            <div class="foot-left">
+              <button class="icon-btn" id="speakSrc" type="button" data-i18n-title="listen" title="Ouvir" hidden>
+                <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M3 9v6h4l5 5V4L7 9H3zm13.5 3A4.5 4.5 0 0 0 14 7.97v8.05c1.48-.73 2.5-2.25 2.5-4.02zM14 3.23v2.06c2.89.86 5 3.54 5 6.71s-2.11 5.85-5 6.71v2.06c4.01-.91 7-4.49 7-8.77s-2.99-7.86-7-8.77z"/></svg>
+              </button>
+              <button class="chip-btn" id="kbdBtn" type="button" aria-expanded="false" hidden>
+                <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M20 5H4c-1.1 0-1.99.9-1.99 2L2 17c0 1.1.9 2 2 2h16c1.1 0 2-.9 2-2V7c0-1.1-.9-2-2-2zm-9 3h2v2h-2V8zm0 3h2v2h-2v-2zM8 8h2v2H8V8zm0 3h2v2H8v-2zm-1 2H5v-2h2v2zm0-3H5V8h2v2zm9 7H8v-2h8v2zm0-4h-2v-2h2v2zm0-3h-2V8h2v2zm3 3h-2v-2h2v2zm0-3h-2V8h2v2z"/></svg>
+                <span data-i18n="keyboard">Teclado IPA</span>
+              </button>
+            </div>
+            <span class="count" id="count">0 / 5000</span>
+          </div>
+          <div class="keyboard" id="keyboard" hidden></div>
+        </div>
+
+        <div class="panel tgt">
+          <div class="output" id="out" dir="auto" aria-live="polite"></div>
+          <div class="details" id="details" hidden></div>
+          <div class="panel-foot">
+            <div class="foot-left">
+              <button class="icon-btn" id="speakOut" type="button" data-i18n-title="listen" title="Ouvir" hidden>
+                <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M3 9v6h4l5 5V4L7 9H3zm13.5 3A4.5 4.5 0 0 0 14 7.97v8.05c1.48-.73 2.5-2.25 2.5-4.02zM14 3.23v2.06c2.89.86 5 3.54 5 6.71s-2.11 5.85-5 6.71v2.06c4.01-.91 7-4.49 7-8.77s-2.99-7.86-7-8.77z"/></svg>
+              </button>
+            </div>
+            <button class="icon-btn" id="copyBtn" type="button" data-i18n-title="copy" title="Copiar">
+              <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M16 1H4c-1.1 0-2 .9-2 2v14h2V3h12V1zm3 4H8c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h11c1.1 0 2-.9 2-2V7c0-1.1-.9-2-2-2zm0 16H8V7h11v14z"/></svg>
+            </button>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="options" aria-label="Options">
+      <label class="toggle" id="casualWrap">
+        <input type="checkbox" id="optCasual" checked>
+        <span class="switch" aria-hidden="true"></span>
+        <span><span data-i18n="casual">Fala do dia a dia</span><small id="casualHint"></small></span>
+      </label>
+      <label class="toggle">
+        <input type="checkbox" id="optDots">
+        <span class="switch" aria-hidden="true"></span>
+        <span data-i18n="dots">Separar sílabas</span>
+      </label>
+      <div class="seg" role="radiogroup" aria-labelledby="bracketsLabel">
+        <span id="bracketsLabel" data-i18n="brackets">Colchetes</span>
+        <button type="button" data-brackets="[]" role="radio">[ ]</button>
+        <button type="button" data-brackets="//" role="radio">/ /</button>
+        <button type="button" data-brackets="" role="radio">—</button>
+      </div>
+    </section>
+
+    <section class="notes" id="notes" hidden>
+      <h2 data-i18n="notes">O que mudou</h2>
+      <ul id="notesList"></ul>
+    </section>
+
+    <section class="examples">
+      <h2 data-i18n="examples">Experimente</h2>
+      <div class="chips" id="examples"></div>
+    </section>
+
+    <details class="about">
+      <summary data-i18n="about">Como funciona</summary>
+      <div data-i18n-html="aboutBody"></div>
+    </details>
+  </main>
+
+  <footer class="footer">
+    <span data-i18n="footer">Feito para quem aprende idiomas · código aberto</span>
+  </footer>
+
+  <script type="module" src="src/main.js"></script>
+</body>
+</html>
